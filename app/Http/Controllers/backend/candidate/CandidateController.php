@@ -310,6 +310,9 @@ class CandidateController extends Controller
         $avatar = $candidate->avatar;
         if ($request->hasFile("avatar")) {
             $avatar = $this->uploadFile($request->file("avatar"));
+            if (!empty($candidate->avatar) && file_exists(public_path($candidate->avatar))) { // Loại bỏ ảnh cũ nếu như upload ảnh mới
+                @unlink(public_path($candidate->avatar));
+            }
         }
 
         // Cập nhật ứng viên
@@ -458,7 +461,7 @@ class CandidateController extends Controller
             'translation' => function ($query) use ($lang, $id) {
                 $query->where(['candidate_id' => $id,'alanguage' => $lang]);
             }
-        ])->findOrFail($id);
+        ])->with('city')->findOrFail($id);
 
         // HTML danh sách strengths
         $strengthsHtml = $candidate->translation->strength ? $candidate->translation->strength : '';
@@ -571,7 +574,6 @@ class CandidateController extends Controller
 
     private function processInsertPlaceholders($section, $html, $data = [], $lang = 'vi')
     {
-        //return response()->json($data);
         $translation = $data->translation;
         $placeholders = [
             'insert_personal_info_here' => fn() => HtmlToText::insertPersonalInfoBlock($section, $data, $lang),

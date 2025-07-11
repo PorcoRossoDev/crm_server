@@ -48,7 +48,6 @@ class HtmlToText
     {
         $skills = json_decode($data->skills, true);
         if (empty($skills) || !is_array($skills)) return;
-        //$title = self::$sectionTitles['skills'][$lang] ?? 'KỸ NĂNG';
         $titles = self::getSectionTitles();
         $title = $titles['skills'][$lang] ?? 'KỸ NĂNG';
         $section->addText($title, [
@@ -89,7 +88,6 @@ class HtmlToText
     {
         $rows = json_decode($data->time_education, true);
         if( !isset($rows) || !is_array($rows) || count($rows) == 0 ) return true;
-        //$title = self::$sectionTitles['education'][$lang] ?? 'QUÁ TRÌNH HỌC TẬP';
         $titles = self::getSectionTitles();
         $title = $titles['education'][$lang] ?? 'QUÁ TRÌNH HỌC TẬP';
         $section->addText($title, [
@@ -131,6 +129,7 @@ class HtmlToText
         $fullname = $data->translation->full_name;
         $gender = $data->translation->gender;
         $birthday = date('d-m-Y', strtotime($data->birthday));
+        $address = isset($data->city) ? $data->city->name : '';
         $section->addText($title, [
             'bold' => true,
             'underline' => 'single',
@@ -152,7 +151,7 @@ class HtmlToText
             ['title' => self::subTitle('infomation', 'fullname', $lang), 'description' => $fullname ?? ''],
             ['title' => self::subTitle('infomation', 'gender', $lang), 'description' => $gender ?? ''],
             ['title' => self::subTitle('infomation', 'birthday', $lang), 'description' => $birthday ?? ''],
-            ['title' => self::subTitle('infomation', 'address', $lang), 'description' => 'Đống Đa - Hà Nội' ?? ''],
+            ['title' => self::subTitle('infomation', 'address', $lang), 'description' => $address ?? ''],
         ];
 
         foreach ($info as $key => $row) {
@@ -328,6 +327,7 @@ class HtmlToText
         $gender = $data->translation->gender;
         $birthday = date('d-m-Y', strtotime($data->birthday));
         $avatarPath = $data->avatar ?? asset($data->avatar);
+        $address = isset($data->city) ? $data->city->name : '';
 
         $titles = self::getSectionTitles();
         $title = $titles['infomation'][$lang] ?? 'THÔNG TIN CÁ NHÂN';
@@ -382,7 +382,7 @@ class HtmlToText
             self::subTitle('infomation', 'fullname', $lang) => $fullname,
             self::subTitle('infomation', 'birthday', $lang) => $birthday,
             self::subTitle('infomation', 'gender', $lang) => $gender,
-            self::subTitle('infomation', 'address', $lang)   => 'Hà nội',
+            self::subTitle('infomation', 'address', $lang)   => $address,
         ];
 
         $i = 0;

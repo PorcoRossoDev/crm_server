@@ -64,5 +64,10 @@ class Candidate extends Model
     {
         return $this->hasOne(CandidateTranslation::class);
     }
+
+    public function city()
+    {
+        return $this->hasOne(VNCity::class, 'id', 'current_location');
+    }
     
 }
